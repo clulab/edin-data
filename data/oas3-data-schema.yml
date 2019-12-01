@@ -1,0 +1,78 @@
+openapi: "3.0.0"
+info:
+  description: |
+    Schema for "silver" biomolecular event mentions mined from the full text of a subset of [PubMed Central](https://www.ncbi.nlm.nih.gov/pmc/) publications using [Reach](https://github.com/clulab/reach/tree/d6a84be099a155b2bedb69f2102493d5db9399fb) (commit [`d6a84be099a155b2bedb69f2102493d5db9399fb`](https://github.com/clulab/reach/tree/d6a84be099a155b2bedb69f2102493d5db9399fb)).  A portion of this data was used to supplement the training of [`edin`](https://github.com/ZhengTang1120/Interpretation-Decoder-for-Neural-Network/tree/master).
+  version: "0.0.1"
+  title: |
+    "Silver" IE dataset of biomolecular event mentions
+  contact:
+    email: "zhengtang@email.arizona.edu"
+  license:
+    name: "CC-BY-NC-SA-4.0"
+    url: "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+paths: {}
+
+components:
+  schemas:
+    Event:
+      title: EdinEvent
+      description: |
+        Edin Event mention
+      type: object
+      required:
+        - sentence
+        - rule
+        - trigger
+        - entity
+      properties:
+        sentence:
+          type: string
+          description: |
+            Complete text of some sentence.
+        rule:
+          type: string
+          description: |
+            Name of the [Odin rule](https://arxiv.org/abs/1509.07513) that matched this event.
+        trigger:
+          $ref: "#/components/schemas/Mention"
+        entity:
+          $ref: "#/components/schemas/Mention"
+    Mention:
+      title: EdinMention
+      type: object
+      required:
+        - text
+        - span
+      properties:
+        text:
+          type: string
+          description: |
+            Represents a span of text
+        span:
+          $ref: "#/components/schemas/Span"
+      example:
+        text: MEK
+        span:
+          start: 0
+          end: 2
+    Span:
+      title: EdinSpan
+      type: object
+      description: |
+        Represents a character-based slice of text relative to `Event.sentence`.
+      required:
+        - start
+        - end
+      properties:
+        start:
+          type: integer
+          format: int32
+          minimum: 0
+          description: |
+            The index of the start character relative to `Event.sentence`.
+        end:
+          type: integer
+          format: int32
+          minimum: 0
+          description: |
+            The index of the end character relative to `Event.sentence`.
